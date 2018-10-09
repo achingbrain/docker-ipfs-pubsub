@@ -17,6 +17,7 @@ ipfs.on('ready', async () => {
 
   console.info('My peer id', us.id)
 
+  // subscribe to our topic
   try {
     await ipfs.pubsub.subscribe(topic, ({from, data}) => {
       if (from === us.id) {
@@ -35,6 +36,7 @@ ipfs.on('ready', async () => {
   console.info(`Subscribed to ${topic}`)
 
   setInterval(async () => {
+    // every now and again, send a message to the topic
     try {
       console.info('Publishing message')
       await ipfs.pubsub.publish(topic, Buffer.from('Hello, it is ' + Date.now()))
@@ -43,6 +45,7 @@ ipfs.on('ready', async () => {
     }
 
     try {
+      // print out our topic peers
       const topicPeers = await ipfs.pubsub.peers(topic)
       console.info('Topic peers:')
 
@@ -54,6 +57,7 @@ ipfs.on('ready', async () => {
         console.info(peer.info.id.toB58String())
       })
 
+      // print out our swarm peers
       const swarmPeers = await ipfs.swarm.peers()
 
       console.info('Swarm peers:')
