@@ -5,8 +5,7 @@ const IPFS = require('ipfs')
 const ipfs = new IPFS({
   init: true,
   EXPERIMENTAL: {
-    pubsub: true,
-    dht: true
+    pubsub: true
   }
 })
 
@@ -68,6 +67,23 @@ ipfs.on('ready', async () => {
 
       swarmPeers.forEach(peer => {
         console.info(peer.peer.toB58String())
+      })
+
+      // print out listen addresses
+      const addrs = await ipfs.swarm.addrs()
+
+      console.info('Swarm addrs:')
+
+      if (!addrs.length) {
+        console.info('None')
+      }
+
+      addrs.forEach(peer => {
+        console.info(peer.id.toB58String())
+
+        peer.multiaddrs.forEach(multiaddr => {
+          console.info(multiaddr.toString())
+        })
       })
     } catch (error) {
       console.error(error)
